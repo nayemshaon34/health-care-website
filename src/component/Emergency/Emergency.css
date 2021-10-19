@@ -1,0 +1,17 @@
+.emergency{
+    background-color: #402849;
+    color: #34beb9;
+    
+    /* z-index: 2;
+    position: relative; */
+    
+}
+.position{
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+}
+.pos{
+    display: flex;
+    align-items: center;
+}

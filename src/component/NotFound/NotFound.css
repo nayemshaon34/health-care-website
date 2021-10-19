@@ -1,0 +1,10 @@
+.messg{
+    text-align: center;
+}
+.not-found{
+    padding:150px;
+    color: rgba(0, 0, 0, 0.7);
+}
+.card-contain{
+    overflow: hidden;
+}
