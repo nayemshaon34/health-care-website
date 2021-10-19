@@ -15,7 +15,7 @@ const Footer = () => {
             <h1 className="subscribe-letter">Subscribe to our Newsletter for latest news.</h1>
                 <div className="subscribe-box my-5">  
                     <input type="text" placeholder="Your Email"/>
-                    <button class="submit-newsletter button_outline"> SUBSCSRIBE</button>                
+                    <button className="submit-newsletter button_outline"> SUBSCSRIBE</button>                
                 </div>
                 <hr />
 
