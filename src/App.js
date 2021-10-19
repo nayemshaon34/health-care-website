@@ -9,6 +9,10 @@ import Header from './component/Header/Header';
 import NotFound from './component/NotFound/NotFound';
 import Login from './component/Login/Login';
 import Services from './component/Services/Services';
+import AboutUs from './component/AboutUs/AboutUs';
+import Footer from './component/Footer/Footer';
+import Detail from './component/Detail/Detail';
+import PrivateRoute from './component/PrivateRoute/PrivateRoute';
 
 function App() {
   return (
@@ -22,16 +26,22 @@ function App() {
           <Route exact path="/">
             <Home></Home>
           </Route>
-          <Route>
+          <Route path='/login'>
             <Login></Login>
           </Route>
           <Route path="/services">
             <Services></Services>
           </Route>
+          <Route path="/aboutUs"></Route>
+          <AboutUs></AboutUs>
+          <PrivateRoute path="/details">
+              <Detail></Detail>
+          </PrivateRoute>
           <Route path="*">
                 <NotFound></NotFound>
           </Route>
         </Switch>
+        <Footer></Footer>
       </Router>
     </div>
   );
