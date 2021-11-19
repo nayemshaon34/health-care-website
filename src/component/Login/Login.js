@@ -1,142 +1,94 @@
-import { getAuth, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, signOut } from '@firebase/auth';
 import React from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import { useForm } from "react-hook-form";
 import { Link } from 'react-router-dom';
-import { useState } from 'react/cjs/react.development';
-import initializeAuthentication from '../../Firebase/firebase.init';
+import { useHistory, useLocation } from 'react-router';
 import useAuth from '../../hooks/useAuth';
-import './Login.css';
-initializeAuthentication();
 
 const Login = () => {
-  
+    const { setEmail, setPassword, error, setUser, setError, signInWithGoogle, handleEmailSignIn, setIsLoading } = useAuth();
+    const location = useLocation();
+    const history = useHistory();
+    const redirect_uri = location.state?.from || '/home';
 
-const googleProvider = new GoogleAuthProvider();
-const gitProvider = new GithubAuthProvider();
+    const handleGoogleSignIn = () => {
+        signInWithGoogle()
+            .then((result) => {
+                setUser(result.user);
+                setError('');
+                history.push(redirect_uri);
+            }).catch((error) => {
+                setError(error.message);
+            })
+            .finally(() => setIsLoading(false))
+    }
 
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
-const auth = getAuth();
+    const handleEmailChange = (event) => {
+        setEmail(event.target.value)
+    }
+    const handlePassChange = (event) => {
+        setPassword(event.target.value)
+    }
 
-  const [user,setUser] = useState({});
+    const onSubmit = (data) => {
+        handleEmailSignIn()
+            .then((userCredential) => {
+                setUser(userCredential.user);
+                setError('');
+                history.push(redirect_uri);
+            })
+            .catch((error) => {
+                setError(error.message);
+            })
+            .finally(() => setIsLoading(false))
+    }
 
-  const signInViaGoogle = () =>{
-    signInWithPopup(auth, googleProvider)
-    .then((result) => {
-     const {displayName,email,photoURL} = result.user;
-     
-     const googleInfo = {
-      name :displayName,
-      email: email,
-      photo: photoURL 
-     };
-     setUser(googleInfo);
-     
-  }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-  });
-
-  
-  }
-  const signInViaGithub = () =>{
-    signInWithPopup(auth,gitProvider)
-    .then(result =>{
-      const {displayName,email,photoURL} = result.user;
-      const gitLoggedUser = {
-          name : displayName,
-          email: email,
-          photo:photoURL
-      };
-      setUser(gitLoggedUser);
-    }).catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.email;
-      // The AuthCredential type that was used.
-      const credential = GithubAuthProvider.credentialFromError(error);
-      // ...
-    });
-}
-
-const logOut = () =>{
-  signOut(auth)
-  .then(()=>{
-    setUser({});
-  }).catch((error) => {
-    // An error happened.
-  });
-}
     return (
-        <div className="login-form">
-            <div>
-                <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8">
-    <div>
-      <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow"/>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Sign in to your account
-      </h2>
-      
-    </div>
-    <form class="mt-8 space-y-6" action="#" method="POST">
-      <input type="hidden" name="remember" value="true"/>
-      <div class="rounded-md shadow-sm -space-y-px">
-        <div>
-          <label for="email-address" class="sr-only">Email address</label>
-          <input id="email-address" name="email" type="email" autocomplete="email" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address"/>
-        </div>
-        <div>
-          <label for="password" class="sr-only">Password</label>
-          <input id="password" name="password" type="password" autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password"/>
-        </div>
-      </div>
+        <Container fluid className="signup-full-container">
+            <Container>
+                <Row>
+                    <Col md={12} lg={5} className="mt-3 mt-lg-0 p-3 p-lg-5 ms-auto">
+                        <Row>
+                                <h2 className="fw-bold ms-lg-4 text-center ">LOG IN</h2>
+                                <h6 className="mb-1 ms-lg-4 text-center">Log in to get seviece.</h6>
+                        </Row>
+                        
+                        <button className="login-page-style btn-signInMethod fw-bold d-flex justify-content-center align-items-center p-1" onClick={handleGoogleSignIn}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" className="bi bi-google" viewBox="0 0 16 16">
+                                <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z" />
+                            </svg> Log in with Google</button>
 
-      <div class="flex items-center justify-between">
-        <div class="flex items-center">
-          <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"/>
-          <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-            Remember me
-          </label>
-        </div>
+                        <div className="hr-div" height="20">
+                            <span style={{backgroundColor:"#A4D0DB"}}>
+                                Or Log in with Email
+                            </span>
+                        </div>
 
-        <div class="text-sm">
-          
-        </div>
-      </div>
 
-      <div>
-        <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-          <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-            {/* <!-- Heroicon name: solid/lock-closed --> */}
-            <svg class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-            </svg>
-          </span>
-          Sign in
-        </button>
-      </div>
-    </form>
-    <p>new here? <Link to="/register">Create Account</Link></p>
-                <div><p>or</p></div>
-                <button 
-                    className="btn-regular bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
-                    onClick={signInViaGoogle}
-                >Google Sign In</button>
+                        {/* Sign Up With Email Form */}
+                        <form onSubmit={handleSubmit(onSubmit)} className="mt-3 mt-lg-4">
 
-  </div>
-</div>
-            </div>
-            
-            
-        </div>
-        
+                            <label htmlFor="email" className="fw-bold">Email*</label>
+                            <input className="input-field login-page-style login-page" type="email" {...register("email", { required: true })} placeholder="example@email.com" onBlur={handleEmailChange} />
+                            {errors.email && <p className="text-danger input-error-message">This field is required</p>}
+
+                            <label htmlFor="password" className="fw-bold">Password*</label>
+                            <input className="login-page-style login-page input-field" type="password" {...register("password", { required: true, minLength: 6 })} placeholder="minimum 6 characters" onBlur={handlePassChange} />
+                            {errors.password && <p className="text-danger input-error-message">{errors.password.type === 'required' ? <span>This field is required</span> : <span>Minimum six characters long</span>}</p>}
+
+                            {
+                                error && <p className="text-danger input-error-message">Incorrect Password. Please Try Again.</p>
+                            }
+
+                            <button type="submit" className="btn-signInMethod signup-submit">Log In</button>
+                        </form>
+                        <h6 className="text-center">Don't have an account? <Link to="/register">Sign Up</Link></h6>
+                    </Col>
+                </Row>
+            </Container>
+        </Container >
     );
 };
 

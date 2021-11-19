@@ -4,6 +4,7 @@
 .not-found{
     padding:150px;
     color: rgba(0, 0, 0, 0.7);
+    text-align: center;
 }
 .card-contain{
     overflow: hidden;

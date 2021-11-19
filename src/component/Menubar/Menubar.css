@@ -9,3 +9,18 @@
     transition: all .3s ease-in-out 0s;
 }
 
+.border-style{
+    border: 1px solid rgba(255, 0, 0, 0.258);
+}
+
+.color{
+    text-decoration: none;
+}
+.header-color{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+.text-decoration{
+    text-decoration: none;
+}

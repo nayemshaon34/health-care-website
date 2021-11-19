@@ -10,11 +10,11 @@ const Services = () => {
             .then(data => setCourse(data))
         },[])
     
-        const newCourse = course.slice(9,15);
+        const newCourse = course.slice(9,17);
         console.log(newCourse);
     return (
         <div>
-            <h1 className="text-6xl mt-20">Our Services</h1>
+            <h1 className="text-4xl font-semibold mt-20">Our Services</h1>
             <div className="card-contain my-12">
             
             <div className="card-contanier">
@@ -22,7 +22,7 @@ const Services = () => {
                       {
                           newCourse.map(course => <Service
                             course={course}
-                            key={course._id}
+                            key={course.index}
                             ></Service>)
                       }      
                 </div>
