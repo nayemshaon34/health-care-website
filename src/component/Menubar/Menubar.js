@@ -37,11 +37,11 @@ const Menubar = () => {
                                 <NavLink className="text-decoration-none me-5 color" to="/services" activeStyle={{fontWeight: "bold",color: "red"}}>Services</NavLink>
                             </li>
                             
-                            {
-                                user.email &&<li className="nav-item me-auto mt-2">
+                            
+                            <li className="nav-item me-auto mt-2">
                                 <NavLink className="text-decoration-none me-5 color" to="/detail" activeStyle={{fontWeight: "bold",color: "red"}}>Details</NavLink>
                             </li>
-                            }
+                            
 
                             <li className="nav-item me-auto mt-2">
                                 <NavLink className="text-decoration-none me-5 color" to="/contact" activeStyle={{fontWeight: "bold",color: "red"}}>Contact</NavLink>
